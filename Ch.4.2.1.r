@@ -27,3 +27,5 @@ class(p224r63_2011_sp)
 # convert sp to brick
 p224r63_2011_ras <- as(p224r63_2011_sp, "RasterBrick")
 plot(p224r63_2011)
+
+p224r63_2011_ras < writeRaster(p224r63_2011_ras, filename = "raster_data/p224r63.tif")
