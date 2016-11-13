@@ -36,5 +36,33 @@ ggR(p224r63_2011, 5, geom_raster = TRUE) +
 
 
 ### plot RGB
+plotRGB(p224r63_2011, r = 4, g = 3, b = 2, stretch = "lin")
+
+ggRGB(p224r63_2011, r = 4, g = 3, b = 2, stretch = "lin")
 
 
+
+
+## combining with vector layers
+csv_file <- read.csv("vector_data/csv_file_locationdata.csv")
+csv.spdf <- SpatialPointsDataFrame(csv_file[, c("X", "Y")], data = csv_file[3:5])
+studyArea <- readOGR("vector_data", "study_area_UTMnorth")
+
+
+plot(p224r63_2011, 5)
+points(csv.spdf, col = "blue")
+plot(studyArea, add = TRUE, lwd = 10)
+
+
+## with ggplot2 wrapper
+df_pts <- as.data.frame(csv.spdf)
+df_poly <- fortify(studyArea)
+
+df_ras <- as.data.frame(p224r63_2011, xy = TRUE)
+## or
+df_ras <- fortify(p224r63_2011, maxpixels = 1e+05)
+
+ggRGB(p224r63_2011, 4, 3, 2, stretch = "lin") +
+  geom_point(data = df_pts, aes(x = X, y = Y), size = 5, col = "yellow") +
+  geom_path(data = df_poly, aes(x = long, y = lat, group = group), size = 2, col = "blue") +
+  coord_equal()
